@@ -179,6 +179,38 @@ class WarpFrame(gym.ObservationWrapper):
             obs[self._key] = frame
         return obs
 
+class WarpCutFrame(gym.ObservationWrapper):
+    '''Esse wrapper serve para cortar a imagem
+        x e y sao as porcentagens de inicio do corte em relacao a imagem original
+        width e height sao as porcentagens do tamanho da imagem desejados em 
+        relacao a imagem original
+        OBS: esse codigo foi planejado somente para ambientes de imagens
+    '''
+    def __init__(self, env, width=1, height=0.5, x=0, y=0):
+        super().__init__(env)
+        self._width = int(env.observation_space.shape[0]*width)
+        self._height = int(env.observation_space.shape[1]*height)
+        self.x = int(env.observation_space.shape[0]*x)
+        self.y = int(env.observation_space.shape[1]*y)
+
+        new_space = gym.spaces.Box(
+            low=0,
+            high=255,
+            shape=(self._height,self._width, env.observation_space.shape[2]),
+            dtype=np.uint8,
+        )
+        
+        original_space = self.observation_space
+        self.observation_space = new_space
+        assert original_space.dtype == np.uint8 and len(original_space.shape) == 3
+
+    def observation(self, obs):
+    
+        frame = obs
+        frame = frame[self.y: self.y + self._height, self.x: self.x + self._width]
+
+        obs = frame
+        return obs
 
 class FrameStack(gym.Wrapper):
     def __init__(self, env, k):
@@ -284,6 +316,7 @@ def wrap_retro(env):
     """Configure environment for Retro environment.
     """
     env = MaxAndSkipEnv(env, skip=4)
+    #env = WarpCutFrame(env)
     env = WarpFrame(env)
     env = FrameStack(env, 4)
     # env = ClipRewardEnv(env)
