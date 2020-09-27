@@ -1,13 +1,13 @@
-from dqn import *
-from experience_replay import *
-
 class DQNAgent:
     """
     Uma classe que cria um agente DQN que utiliza NStepBuffer como memória
     """
     def __init__(self, 
                  observation_space, 
-                 action_space, 
+                 action_space,
+                 alpha = 0,
+                 beta = 1,
+                 beta_decay = 0, 
                  lr=7e-4, 
                  gamma=0.99,
                  max_memory=100000,
@@ -20,9 +20,12 @@ class DQNAgent:
         """
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+        self.alpha = alpha
+        self.loss_param = beta
+        self.loss_param_decay = beta_decay
         self.gamma = gamma
         self.n_step = n_step
-        self.memory = ReplayBuffer(max_memory, observation_space.shape)
+        self.memory = ReplayBuffer(max_memory, observation_space.shape, alpha, 1e-4)
         self.n_step_buffer = NStepBuffer(observation_space.shape, gamma, n_step)
         self.action_space = action_space
 
@@ -59,11 +62,11 @@ class DQNAgent:
         # Se temos menos experiências que o batch size
         # não começamos o treinamento
         if batch_size > self.memory.size:
-            return
+            return -float("inf")
         
         for epoch in range(epochs):
             # Pegamos uma amostra das nossas experiências para treinamento
-            (states, actions, rewards, next_states, dones) = self.memory.sample(batch_size)
+            (states, actions, rewards, next_states, dones, priorities, indexes) = self.memory.sample(batch_size)
 
             # Transformar nossas experiências em tensores
             states = torch.as_tensor(states).to(self.device)
@@ -78,12 +81,24 @@ class DQNAgent:
                 q2 = self.dqn.forward(next_states).max(dim=-1, keepdim=True)[0]
 
                 target = (rewards + (1 - dones) * (self.gamma ** self.n_step) * q2).to(self.device)
+                N = len(self.memory)
+                w = (N * priorities) ** (-self.loss_param)
+                w = w/w.max()
+                self.loss_param *= 1+self.loss_param_decay if self.loss_param < 1 else 1
 
             loss = F.mse_loss(q, target)
+            self.memory.update_priority(indexes, torch.abs(loss))
 
+            w = torch.as_tensor(w).to(self.device).unsqueeze(-1)
+            weighted_loss = loss * w.detach()
+            final_loss = torch.mean(weighted_loss)
             self.optimizer.zero_grad()
-            loss.backward()
+            final_loss.backward()
+            for param in self.dqn.parameters():
+                param.grad.data.clamp_(-100,100)
             self.optimizer.step()
+
+            return final_loss
 
     def save_model(self, path):
         torch.save(self.dqn.state_dict(), path)
