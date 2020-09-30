@@ -188,10 +188,10 @@ class WarpCutFrame(gym.ObservationWrapper):
     '''
     def __init__(self, env, width=1, height=0.5, x=0, y=0):
         super().__init__(env)
-        self._width = int(env.observation_space.shape[0]*width)
-        self._height = int(env.observation_space.shape[1]*height)
-        self.x = int(env.observation_space.shape[0]*x)
-        self.y = int(env.observation_space.shape[1]*y)
+        self._height = int(env.observation_space.shape[0]*height)
+        self._width = int(env.observation_space.shape[1]*width)
+        self.y = int(env.observation_space.shape[0]*y)
+        self.x = int(env.observation_space.shape[1]*x)
 
         new_space = gym.spaces.Box(
             low=0,
@@ -316,7 +316,7 @@ def wrap_retro(env):
     """Configure environment for Retro environment.
     """
     env = MaxAndSkipEnv(env, skip=4)
-    #env = WarpCutFrame(env)
+    env = WarpCutFrame(env)
     env = WarpFrame(env)
     env = FrameStack(env, 4)
     # env = ClipRewardEnv(env)
