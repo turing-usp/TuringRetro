@@ -1,4 +1,6 @@
 import numpy as np
+import random
+import torch
 
 class ReplayBuffer:
     """Experience Replay Buffer para DQNs, com priority sampling."""

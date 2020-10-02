@@ -1,3 +1,6 @@
+from experience_replay import *
+from dqn import *
+
 class DQNAgent:
     """
     Uma classe que cria um agente DQN que utiliza NStepBuffer como memória
@@ -5,9 +8,9 @@ class DQNAgent:
     def __init__(self, 
                  observation_space, 
                  action_space,
-                 alpha = 0,
-                 beta = 1,
-                 beta_decay = 0, 
+                 alpha = 0.6,
+                 beta = 0.4,
+                 beta_decay = 2e-5, 
                  lr=7e-4, 
                  gamma=0.99,
                  max_memory=100000,
@@ -90,7 +93,7 @@ class DQNAgent:
             self.memory.update_priority(indexes, torch.abs(loss))
 
             w = torch.as_tensor(w).to(self.device).unsqueeze(-1)
-            weighted_loss = loss * w.detach()
+            weighted_loss = loss * w
             final_loss = torch.mean(weighted_loss)
             self.optimizer.zero_grad()
             final_loss.backward()
