@@ -68,7 +68,7 @@ class ReplayBuffer:
     
     def update_priority(self, index, new_priority):
         q = (new_priority.type(torch.float64) + self.offset) ** self.alpha
-        self.priority[index] = q.detach().numpy()
+        self.priority[index] = q.detach().cpu().numpy()
             
     def sample(self, batch_size):
         """Retorna um batch de experiências.
