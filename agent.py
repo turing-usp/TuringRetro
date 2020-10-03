@@ -3,7 +3,8 @@ import torch
 import torch.optim as optim
 import torch.nn.functional as F
 
-from experience_replay import ReplayBuffer, NStepBuffer
+from experience_replay import NStepBuffer
+from per import PrioritizedReplayBuffer
 from dqn import Network
 
 class DQNAgent:
@@ -33,7 +34,7 @@ class DQNAgent:
         self.loss_param_decay = beta_decay
         self.gamma = gamma
         self.n_step = n_step
-        self.memory = ReplayBuffer(max_memory, observation_space.shape, alpha, 1e-4)
+        self.memory = PrioritizedReplayBuffer(max_memory, observation_space.shape, alpha)
         self.n_step_buffer = NStepBuffer(observation_space.shape, gamma, n_step)
         self.action_space = action_space
 
@@ -41,7 +42,7 @@ class DQNAgent:
         self.epsilon_decay = epsilon_decay
         self.min_epsilon = min_epsilon
 
-        self.dqn = Network(observation_space.shape, action_space.n).to(self.device)
+        self.dqn = Network(observation_space.shape, action_space.n).to(self.device, non_blocking=True)
 
         self.optimizer  = optim.Adam(self.dqn.parameters(), lr=lr)
 
@@ -74,7 +75,8 @@ class DQNAgent:
         
         for epoch in range(epochs):
             # Pegamos uma amostra das nossas experiências para treinamento
-            (states, actions, rewards, next_states, dones, priorities, indexes) = self.memory.sample(batch_size)
+            (states, actions, rewards, next_states, dones, priorities, indexes) = self.memory.sample(batch_size, self.loss_param)
+            self.loss_param *= 1+self.loss_param_decay if self.loss_param < 1 else 1
 
             # Transformar nossas experiências em tensores
             states = torch.as_tensor(states).to(self.device, non_blocking=True)
@@ -82,24 +84,23 @@ class DQNAgent:
             rewards = torch.as_tensor(rewards).to(self.device, non_blocking=True).unsqueeze(-1)
             next_states = torch.as_tensor(next_states).to(self.device, non_blocking=True)
             dones = torch.as_tensor(dones).to(self.device, non_blocking=True).unsqueeze(-1)
+            weights = torch.as_tensor(priorities).to(self.device, non_blocking=True).unsqueeze(-1)
 
             q = self.dqn.forward(states).gather(-1, actions.long())
 
             with torch.no_grad():
                 q2 = self.dqn.forward(next_states).max(dim=-1, keepdim=True)[0]
 
-                target = (rewards + (1 - dones) * (self.gamma ** self.n_step) * q2).to(self.device)
-                N = len(self.memory)
-                w = (N * priorities) ** (-self.loss_param)
-                w = w/w.max()
-                self.loss_param *= 1+self.loss_param_decay if self.loss_param < 1 else 1
+                target = (rewards + (1 - dones) * (self.gamma ** self.n_step) * q2)
 
             loss = F.mse_loss(q, target, reduction="none")
-            self.memory.update_priority(indexes, torch.abs(loss))
+            
+            priorities = loss.detach().cpu().numpy() + 1e-6
+            self.memory.update_priorities(indexes, priorities)
 
-            w = torch.as_tensor(w).to(self.device).unsqueeze(-1)
-            weighted_loss = loss * w
+            weighted_loss = loss * weights
             final_loss = torch.mean(weighted_loss)
+
             self.optimizer.zero_grad()
             final_loss.backward()
             for param in self.dqn.parameters():
