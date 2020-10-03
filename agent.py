@@ -54,7 +54,7 @@ class DQNAgent:
             return action
 
         with torch.no_grad():
-            state = torch.FloatTensor(state).unsqueeze(0).to(self.device)
+            state = torch.FloatTensor(state).unsqueeze(0).to(self.device, non_blocking=True)
             action = self.dqn.forward(state).argmax(dim=-1)
             action = action.cpu().numpy()[0]
 
@@ -77,11 +77,11 @@ class DQNAgent:
             (states, actions, rewards, next_states, dones, priorities, indexes) = self.memory.sample(batch_size)
 
             # Transformar nossas experiências em tensores
-            states = torch.as_tensor(states).to(self.device)
-            actions = torch.as_tensor(actions).to(self.device).unsqueeze(-1)
-            rewards = torch.as_tensor(rewards).to(self.device).unsqueeze(-1)
-            next_states = torch.as_tensor(next_states).to(self.device)
-            dones = torch.as_tensor(dones).to(self.device).unsqueeze(-1)
+            states = torch.as_tensor(states).to(self.device, non_blocking=True)
+            actions = torch.as_tensor(actions).to(self.device, non_blocking=True).unsqueeze(-1)
+            rewards = torch.as_tensor(rewards).to(self.device, non_blocking=True).unsqueeze(-1)
+            next_states = torch.as_tensor(next_states).to(self.device, non_blocking=True)
+            dones = torch.as_tensor(dones).to(self.device, non_blocking=True).unsqueeze(-1)
 
             q = self.dqn.forward(states).gather(-1, actions.long())
 
@@ -94,7 +94,7 @@ class DQNAgent:
                 w = w/w.max()
                 self.loss_param *= 1+self.loss_param_decay if self.loss_param < 1 else 1
 
-            loss = F.mse_loss(q, target)
+            loss = F.mse_loss(q, target, reduction="none")
             self.memory.update_priority(indexes, torch.abs(loss))
 
             w = torch.as_tensor(w).to(self.device).unsqueeze(-1)
