@@ -100,7 +100,7 @@ class ReplayBuffer:
                 self.rewards[idxs],
                 self.next_states[idxs],
                 self.dones[idxs],
-                self.priority[idxs]/sum(self.priority[idxs]),
+                self.priority[idxs]/sum(self.priority),
                 idxs
                 )
 
