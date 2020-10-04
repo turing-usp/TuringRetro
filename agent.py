@@ -95,7 +95,7 @@ class DQNAgent:
 
             loss = F.mse_loss(q, target, reduction="none")
             
-            priorities = loss.detach().cpu().numpy() + 1e-6
+            priorities = loss.detach().cpu().numpy()
             self.memory.update_priorities(indexes, priorities)
 
             weighted_loss = loss * weights
