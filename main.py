@@ -1,8 +1,10 @@
-from agent import *
-import retro
-from utils import retro_wrappers
 import math
+import retro
 from collections import deque
+
+from agent import *
+from utils import retro_wrappers
+from callbacks import EvalCallback
 
 def main():
     game_rom = "Fzero-Snes" #Nome da rom
@@ -10,6 +12,8 @@ def main():
     scenario = "training"
     env = retro.make(game_rom, state=state, scenario=scenario)
     env = retro_wrappers.wrap_retro(env)
+
+    eval_callback = EvalCallback(env, frequency=10, episode_count=3)
 
     BATCH_SIZE = 32
     ALPHA = 0.7
@@ -40,9 +44,9 @@ def main():
                  min_epsilon=EPS_END,
                  n_step=N_STEP)
     
-    returns = train(agent, env, 400000)
+    returns = train(agent, env, 400000, eval_callback)
 
-def train(agent, env, total_timesteps):
+def train(agent, env, total_timesteps, callback):
     total_reward = 0
     episode_returns = deque(maxlen=20)
     avg_returns = []
@@ -65,6 +69,7 @@ def train(agent, env, total_timesteps):
         if done:
             episode_returns.append(total_reward)
             episode += 1
+            callback.update(agent)
             next_state = env.reset()
 
         if any(G for G in episode_returns):
