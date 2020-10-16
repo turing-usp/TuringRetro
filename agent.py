@@ -45,6 +45,7 @@ class DQNAgent:
 
         self.dqn = Network(observation_space.shape, action_space.n).to(self.device)
         self.target_dqn = Network(observation_space.shape, action_space.n).to(self.device)
+        self.target_dqn.eval()
 
         for target_param, param in zip(self.dqn.parameters(),self.target_dqn.parameters()):
             target_param.data.copy_(param)
@@ -90,9 +91,9 @@ class DQNAgent:
             dones = torch.as_tensor(dones).to(self.device, non_blocking=True).unsqueeze(-1)
 
             curr_q = self.dqn.forward(states).gather(-1, actions.long())
-            next_q = self.target_dqn.forward(next_states)
 
             with torch.no_grad():
+                next_q = self.target_dqn.forward(next_states)
                 max_next_q = torch.max(next_q, -1)[0]
                 max_next_q = max_next_q.view(max_next_q.size(0), 1)
 
@@ -115,8 +116,10 @@ class DQNAgent:
                 param.grad.data.clamp_(-100,100)
             self.optimizer.step()
 
-            for target_param, param in zip(self.target_dqn.parameters(), self.dqn.parameters()):
-                target_param.data.copy_(self.tau * param + (1 - self.tau) * target_param)
+            with torch.no_grad():
+                for target_param, param in zip(self.target_dqn.parameters(), self.dqn.parameters()):
+                    target_param.data.mul_(1 - self.tau)
+                    torch.add(target_param.data, param.data, alpha=self.tau, out=target_param.data)
 
             return final_loss
 
