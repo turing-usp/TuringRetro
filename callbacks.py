@@ -6,11 +6,20 @@ class Callback(object):
         self.frequency = frequency
         self.counter = 0
     
-    def update(self):
+    def update(self, agent):
         self.counter = (self.counter + 1) % self.frequency
         if self.counter == 0:
-            return True
-        return False
+            self.run(agent)
+
+    def run(self, agent):
+        raise NotImplementedError
+class CallbackList(Callback):
+    def __init__(self, callbacks):
+        self.callbacks = callbacks
+
+    def update(self, agent):
+        for callback in self.callbacks:
+            callback.update(agent)
 
 class EvalCallback(Callback):
     def __init__(self, env, episode_count=1, frequency=1):
@@ -20,8 +29,7 @@ class EvalCallback(Callback):
         self.max_score = -np.inf
 
     def update(self, agent):
-        if super(EvalCallback, self).update():
-            self.run(agent)
+        super(EvalCallback, self).update(agent)
 
     def run(self, agent):
         episode_returns = []
@@ -34,7 +42,7 @@ class EvalCallback(Callback):
             total_reward = 0
             done = 0
             while not done:
-                action = agent.act(state)
+                action = agent.act(state, greedy=True)
                 state, reward, done, _ = self.env.step(action)
                 total_reward += reward
             
@@ -47,3 +55,14 @@ class EvalCallback(Callback):
         if mean_score >= self.max_score:
             self.max_score = mean_score
             agent.save_model("best_model.pth")
+
+class EpsilonCallback(Callback):
+    def __init__(self, epsilon_reset=0.5, frequency=1):
+        super(EpsilonCallback, self).__init__(frequency)
+        self.epsilon_reset = epsilon_reset
+
+    def update(self, agent):
+        super(EpsilonCallback, self).update(agent)
+
+    def run(self, agent):
+        agent.epsilon = self.epsilon_reset

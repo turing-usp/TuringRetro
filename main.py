@@ -4,7 +4,7 @@ from collections import deque
 
 from agent import *
 from utils import retro_wrappers
-from callbacks import EvalCallback
+from callbacks import EvalCallback, EpsilonCallback, CallbackList
 
 def main():
     game_rom = "Fzero-Snes" #Nome da rom
@@ -13,7 +13,10 @@ def main():
     env = retro.make(game_rom, state=state, scenario=scenario)
     env = retro_wrappers.wrap_retro(env)
 
-    eval_callback = EvalCallback(env, frequency=10, episode_count=3)
+    eval_callback = EvalCallback(env, frequency=25, episode_count=3)
+    epsilon_callback = EpsilonCallback(frequency=100)
+
+    callbacks = CallbackList([eval_callback, epsilon_callback])
 
     BATCH_SIZE = 32
     ALPHA = 0.7
@@ -44,7 +47,7 @@ def main():
                  min_epsilon=EPS_END,
                  n_step=N_STEP)
     
-    returns = train(agent, env, 400000, eval_callback)
+    returns = train(agent, env, 400000, callbacks)
 
 def train(agent, env, total_timesteps, callback):
     total_reward = 0
