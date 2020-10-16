@@ -19,6 +19,7 @@ def main():
     EPS_INIT = 0.9
     EPS_END = 0.001
     EPS_DECAY = 0.999
+    TAU = 0.01
     MAX_MEMORY = 10000
     MAX_EPISODES = 1000
     OBS_SPACE = env.observation_space
@@ -31,7 +32,8 @@ def main():
                  beta=BETA,
                  beta_decay=BETA_DECAY, 
                  lr=7e-4, 
-                 gamma=GAMMA, 
+                 gamma=GAMMA,
+                 tau=TAU, 
                  max_memory=MAX_MEMORY,
                  epsilon_init=EPS_INIT,
                  epsilon_decay=EPS_DECAY,
