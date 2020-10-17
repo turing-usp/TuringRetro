@@ -316,10 +316,21 @@ def wrap_retro(env):
     """Configure environment for Retro environment.
     """
     env = MaxAndSkipEnv(env, skip=4)
+    # env = WarpCutFrame(env)
+    env = WarpFrame(env)
+    env = FrameStack(env, 4)
+    env = ScaledFloatFrame(env)
+    env = ObsReshape(env)
+    env = OneHotDecoder(env)
+    return env
+
+def wrap_mario_kart(env):
+    """Configure environment for Mario Kart environment.
+    """
+    env = MaxAndSkipEnv(env, skip=4)
     env = WarpCutFrame(env)
     env = WarpFrame(env)
     env = FrameStack(env, 4)
-    # env = ClipRewardEnv(env)
     env = ScaledFloatFrame(env)
     env = ObsReshape(env)
     env = OneHotDecoder(env)
