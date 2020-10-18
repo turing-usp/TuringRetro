@@ -52,11 +52,11 @@ class DQNAgent:
 
         self.optimizer  = optim.Adam(self.dqn.parameters(), lr=lr)
 
-    def act(self, state):
+    def act(self, state, greedy=False):
         self.epsilon *= self.epsilon_decay
         self.epsilon = max(self.epsilon, self.min_epsilon)
 
-        if np.random.random() < self.epsilon:
+        if np.random.random() < self.epsilon and not greedy:
             action = self.action_space.sample()
             return action
 
