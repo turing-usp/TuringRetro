@@ -5,6 +5,8 @@ from gym import spaces
 import cv2
 cv2.ocl.setUseOpenCL(False)
 
+from utils.action_wrappers import SMarioKartDiscretizer
+
 class NoopResetEnv(gym.Wrapper):
     def __init__(self, env, noop_max=30):
         """Sample initial states by taking random number of no-ops on reset.
@@ -333,5 +335,5 @@ def wrap_mario_kart(env):
     env = FrameStack(env, 4)
     env = ScaledFloatFrame(env)
     env = ObsReshape(env)
-    env = OneHotDecoder(env)
+    env = SMarioKartDiscretizer(env)
     return env

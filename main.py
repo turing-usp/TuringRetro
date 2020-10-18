@@ -25,7 +25,7 @@ def main():
     GAMMA = 0.99
     EPS_INIT = 0.9
     EPS_END = 0.001
-    EPS_DECAY = 0.999
+    EPS_DECAY = 0.9995
     TAU = 0.01
     MAX_MEMORY = 10000
     OBS_SPACE = env.observation_space
@@ -62,7 +62,7 @@ def train(agent, env, total_timesteps, callback):
         next_state, reward, done, _ = env.step(action)
         agent.remember(state, action, reward, next_state, done)
         loss = agent.train()
-        #env.render()
+        # env.render()
         timestep += 1
 
         total_reward += reward
