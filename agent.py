@@ -128,3 +128,4 @@ class DQNAgent:
     
     def load_model(self, path):
         self.dqn.load_state_dict(torch.load(path))
+        self.target_dqn.load_state_dict(torch.load(path))
