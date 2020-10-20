@@ -1,6 +1,7 @@
 import math
 import retro
 from collections import deque
+from gym.wrappers import Monitor
 
 from agent import *
 from utils import retro_wrappers
@@ -40,9 +41,12 @@ def run():
 
     agent.load_model("best_model.pth")
     
-    test(agent, env, 1)
+    test(agent, env, 1, False)
 
-def test(agent, env, episodes):
+def test(agent, env, episodes, record=False):
+    if record:
+        env = Monitor(env, './videos/', force=True)
+
     for episode in range(episodes):
         done = 0
         state = env.reset()
@@ -53,8 +57,9 @@ def test(agent, env, episodes):
             state, reward, done, _ = env.step(action)
             env.render()
             total_reward += reward
+
+            print(f"\r {total_reward:3.3f}", end="")
         
-        print(total_reward)
     env.close()
 
 if __name__ == "__main__":
