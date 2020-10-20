@@ -116,10 +116,7 @@ class DQNAgent:
                 param.grad.data.clamp_(-100,100)
             self.optimizer.step()
 
-            with torch.no_grad():
-                for target_param, param in zip(self.target_dqn.parameters(), self.dqn.parameters()):
-                    target_param.data.mul_(1 - self.tau)
-                    torch.add(target_param.data, param.data, alpha=self.tau, out=target_param.data)
+            self.update_target()
 
             return final_loss
 
@@ -129,3 +126,9 @@ class DQNAgent:
     def load_model(self, path):
         self.dqn.load_state_dict(torch.load(path))
         self.target_dqn.load_state_dict(torch.load(path))
+
+    def update_target(self):
+        with torch.no_grad():
+            for target_param, param in zip(self.target_dqn.parameters(), self.dqn.parameters()):
+                target_param.data.mul_(1 - self.tau)
+                torch.add(target_param.data, param.data, alpha=self.tau, out=target_param.data)
