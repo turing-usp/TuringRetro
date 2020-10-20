@@ -5,7 +5,7 @@ from gym import spaces
 import cv2
 cv2.ocl.setUseOpenCL(False)
 
-from utils.action_wrappers import SMarioKartDiscretizer
+from utils.action_wrappers import SMarioKartDiscretizer, MegaManDiscretizer, FZeroDiscretizer
 
 class NoopResetEnv(gym.Wrapper):
     def __init__(self, env, noop_max=30):
@@ -315,8 +315,7 @@ class OneHotDecoder(gym.ActionWrapper):
         return action
 
 def wrap_retro(env):
-    """Configure environment for Retro environment.
-    """
+    """Configure environment for Retro environment."""
     env = MaxAndSkipEnv(env, skip=4)
     # env = WarpCutFrame(env)
     env = WarpFrame(env)
@@ -327,8 +326,7 @@ def wrap_retro(env):
     return env
 
 def wrap_mario_kart(env):
-    """Configure environment for Mario Kart environment.
-    """
+    """Configure environment for Mario Kart environment."""
     env = MaxAndSkipEnv(env, skip=4)
     env = WarpCutFrame(env)
     env = WarpFrame(env)
@@ -336,4 +334,26 @@ def wrap_mario_kart(env):
     env = ScaledFloatFrame(env)
     env = ObsReshape(env)
     env = SMarioKartDiscretizer(env)
+    return env
+
+def wrap_fzero(env):
+    """Configure environment for F-Zero environment."""
+    env = MaxAndSkipEnv(env, skip=4)
+    env = WarpCutFrame(env)
+    env = WarpFrame(env)
+    env = FrameStack(env, 4)
+    env = ScaledFloatFrame(env)
+    env = ObsReshape(env)
+    env = FZeroDiscretizer(env)
+    return env
+
+def wrap_megaman(env):
+    """Configure environment for MegaMan 2 environment."""
+    env = MaxAndSkipEnv(env, skip=4)
+    env = WarpCutFrame(env)
+    env = WarpFrame(env)
+    env = FrameStack(env, 4)
+    env = ScaledFloatFrame(env)
+    env = ObsReshape(env)
+    env = MegaManDiscretizer(env)
     return env

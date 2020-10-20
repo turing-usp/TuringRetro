@@ -7,9 +7,9 @@ from utils import retro_wrappers
 from callbacks import EvalCallback, EpsilonCallback, CallbackList, SaveCallback
 
 def main():
-    game_rom = "Fzero-Snes" #Nome da rom
-    state = "go.state" 
-    scenario = "training"
+    game_rom = "MegaMan2-Nes" #Nome da rom
+    state = "Normal.Metalman.Fight.state" 
+    scenario = "scenario"
     env = retro.make(game_rom, state=state, scenario=scenario)
     env = retro_wrappers.wrap_retro(env)
 
