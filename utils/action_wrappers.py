@@ -24,14 +24,13 @@ class FZeroDiscretizer(Discretizer):
         
 class SMarioKartDiscretizer(Discretizer):
     def __init__(self, env):
-        comandosSimples = [['B'],            #acelerar
-                           ['LEFT', 'B'],    
-                           ['RIGHT', 'B'],
-                           ['Y'],       #frear
-                           ['A']]        #usar item
-        comandosDrift =  [['L', 'B'],                  #Pular
-                          ['L', 'LEFT'], ['R', 'RIGHT'],  #drift
-                          ['L', 'LEFT', 'B'], ['R', 'RIGHT','B']]
+        comandosSimples = [['B'],                                  # Acelerar
+                           ['LEFT', 'B'],                          # Esquerda
+                           ['RIGHT', 'B'],                         # Direita
+                           ['Y'],                                  # Frear
+                           ['A', 'B']]                             # Item
+        comandosDrift =  [['L', 'B'],                              # Pular
+                          ['L', 'LEFT', 'B'], ['R', 'RIGHT','B']]  # Drift
         comandos = [*comandosSimples + comandosDrift]
         super().__init__(env=env, combos=comandos)
 
