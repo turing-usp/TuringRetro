@@ -290,7 +290,7 @@ class LazyFrames(object):
         return self._force()[..., i]
 
 class TimeLimitWrapper(gym.Wrapper):
-  def __init__(self, env, max_steps=2000):
+  def __init__(self, env, max_steps=1000):
     super(TimeLimitWrapper, self).__init__(env)
     self.max_steps = max_steps
     self.current_step = 0
@@ -304,7 +304,6 @@ class TimeLimitWrapper(gym.Wrapper):
     obs, reward, done, info = self.env.step(action)
     if self.current_step >= self.max_steps:
       done = True
-      reward -= 1000
     return obs, reward, done, info
 
 class ObsReshape(gym.ObservationWrapper):
@@ -326,6 +325,17 @@ class DiscountRewardEnv(gym.RewardWrapper):
     def reward(self, reward):
         return (reward - self.discount)
 
+class PenalizeDoneWrapper(gym.Wrapper):
+  def __init__(self, env, penalty=1):
+    super(PenalizeDoneWrapper, self).__init__(env)
+    self.penalty = penalty
+
+  def step(self, action):
+    obs, reward, done, info = self.env.step(action)
+    if done:
+        reward -= self.penalty
+    return obs, reward, done, info
+
 def wrap_retro(env):
     """Configure environment for Retro environment."""
     env = MaxAndSkipEnv(env, skip=4)
@@ -346,7 +356,7 @@ def wrap_mario_kart(env):
     env = ScaledFloatFrame(env)
     env = ObsReshape(env)
     env = TimeLimitWrapper(env)
-    env = DiscountRewardEnv(env)
+    env = PenalizeDoneWrapper(env)
     env = SMarioKartDiscretizer(env)
     return env
 
