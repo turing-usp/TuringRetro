@@ -64,7 +64,7 @@ class ReplayBuffer:
         
         self.index = (self.index + 1) % self.max_length
         if self.size < self.max_length:
-            self.size = self.index
+            self.size += 1
     
     def update_priority(self, index, new_priority):
         q = (new_priority.type(torch.float64) + self.offset) ** self.alpha

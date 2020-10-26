@@ -5,6 +5,9 @@ from gym import spaces
 import cv2
 cv2.ocl.setUseOpenCL(False)
 
+from retro.examples.discretizer import SonicDiscretizer
+from utils.action_wrappers import SMarioKartDiscretizer, MegaManDiscretizer, FZeroDiscretizer
+
 class NoopResetEnv(gym.Wrapper):
     def __init__(self, env, noop_max=30):
         """Sample initial states by taking random number of no-ops on reset.
@@ -251,7 +254,7 @@ class ScaledFloatFrame(gym.ObservationWrapper):
         # with smaller replay buffers only.
         return np.array(observation).astype(np.float32) / 255.0
 
-class   LazyFrames(object):
+class LazyFrames(object):
     def __init__(self, frames):
         """This object ensures that common frames between the observations are only stored once.
         It exists purely to optimize memory usage which can be huge for DQN's 1M frames replay
@@ -286,6 +289,23 @@ class   LazyFrames(object):
     def frame(self, i):
         return self._force()[..., i]
 
+class TimeLimitWrapper(gym.Wrapper):
+  def __init__(self, env, max_steps=1000):
+    super(TimeLimitWrapper, self).__init__(env)
+    self.max_steps = max_steps
+    self.current_step = 0
+  
+  def reset(self):
+    self.current_step = 0
+    return self.env.reset()
+
+  def step(self, action):
+    self.current_step += 1
+    obs, reward, done, info = self.env.step(action)
+    if self.current_step >= self.max_steps:
+      done = True
+    return obs, reward, done, info
+
 class ObsReshape(gym.ObservationWrapper):
     def __init__(self, env):
         gym.ObservationWrapper.__init__(self, env)
@@ -297,41 +317,67 @@ class ObsReshape(gym.ObservationWrapper):
         observation = np.swapaxes(observation, -1, -2)
         return observation
 
-class OneHotDecoder(gym.ActionWrapper):
-    def __init__(self, env):
-        super().__init__(env)
-        self.action_space = gym.spaces.Discrete(env.action_space.shape[0])
-    
-    def action(self, action):
-        act = np.zeros(self.action_space.n)
-        act[action] = 1
-        act[0] = 1
-        return act
+class DiscountRewardEnv(gym.RewardWrapper):
+    def __init__(self, env, discount=0.005):
+        gym.RewardWrapper.__init__(self, env)
+        self.discount = discount
 
-    def reverse_action(self, action):
-        action = np.argmax(action)
-        return action
+    def reward(self, reward):
+        return (reward - self.discount)
+
+class PenalizeDoneWrapper(gym.Wrapper):
+  def __init__(self, env, penalty=1):
+    super(PenalizeDoneWrapper, self).__init__(env)
+    self.penalty = penalty
+
+  def step(self, action):
+    obs, reward, done, info = self.env.step(action)
+    if done:
+        reward -= self.penalty
+    return obs, reward, done, info
 
 def wrap_retro(env):
-    """Configure environment for Retro environment.
-    """
+    """Configure environment for Retro environment."""
     env = MaxAndSkipEnv(env, skip=4)
     # env = WarpCutFrame(env)
     env = WarpFrame(env)
     env = FrameStack(env, 4)
     env = ScaledFloatFrame(env)
     env = ObsReshape(env)
-    env = OneHotDecoder(env)
+    env = SonicDiscretizer(env)
     return env
 
 def wrap_mario_kart(env):
-    """Configure environment for Mario Kart environment.
-    """
+    """Configure environment for Mario Kart environment."""
     env = MaxAndSkipEnv(env, skip=4)
     env = WarpCutFrame(env)
     env = WarpFrame(env)
     env = FrameStack(env, 4)
     env = ScaledFloatFrame(env)
     env = ObsReshape(env)
-    env = OneHotDecoder(env)
+    env = TimeLimitWrapper(env)
+    env = PenalizeDoneWrapper(env)
+    env = SMarioKartDiscretizer(env)
+    return env
+
+def wrap_fzero(env):
+    """Configure environment for F-Zero environment."""
+    env = MaxAndSkipEnv(env, skip=4)
+    env = WarpCutFrame(env)
+    env = WarpFrame(env)
+    env = FrameStack(env, 4)
+    env = ScaledFloatFrame(env)
+    env = ObsReshape(env)
+    env = FZeroDiscretizer(env)
+    return env
+
+def wrap_megaman(env):
+    """Configure environment for MegaMan 2 environment."""
+    env = MaxAndSkipEnv(env, skip=4)
+    env = WarpCutFrame(env)
+    env = WarpFrame(env)
+    env = FrameStack(env, 4)
+    env = ScaledFloatFrame(env)
+    env = ObsReshape(env)
+    env = MegaManDiscretizer(env)
     return env

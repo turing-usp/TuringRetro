@@ -66,3 +66,13 @@ class EpsilonCallback(Callback):
 
     def run(self, agent):
         agent.epsilon = self.epsilon_reset
+
+class SaveCallback(Callback):
+    def __init__(self, frequency=1):
+        super(SaveCallback, self).__init__(frequency)
+
+    def update(self, agent):
+        super(SaveCallback, self).update(agent)
+
+    def run(self, agent):
+        agent.save_model("latest_model.pth")
