@@ -3,8 +3,8 @@ import torch
 import torch.optim as optim
 import torch.nn.functional as F
 
-from experience_replay import ReplayBuffer, NStepBuffer
-from dqn import Network
+from .experience_replay import ReplayBuffer, NStepBuffer
+from .dqn import Network
 
 class DQNAgent:
     """
@@ -13,22 +13,24 @@ class DQNAgent:
     def __init__(self, 
                  observation_space, 
                  action_space,
+                 batch_size=32,
+                 max_memory=100000,
+                 n_step=3,
                  alpha = 0.6,
                  beta = 0.4,
                  beta_decay = 2e-5, 
                  lr=7e-4, 
                  gamma=0.99,
                  tau=0.01,
-                 max_memory=100000,
                  epsilon_init=0.5,
                  epsilon_decay=0.9995,
-                 min_epsilon=0.01,
-                 n_step=3):
+                 min_epsilon=0.01):
         """
         Inicializa o agente com os parâmetros dados
         """
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+        self.batch_size = batch_size
         self.alpha = alpha
         self.loss_param = beta
         self.loss_param_decay = beta_decay
@@ -73,15 +75,15 @@ class DQNAgent:
             self.memory.update(experience[0],experience[1],experience[2],experience[3],experience[4])
         
 
-    def train(self, batch_size=32, epochs=1):
+    def train(self, epochs=1):
         # Se temos menos experiências que o batch size
         # não começamos o treinamento
-        if batch_size > self.memory.size:
+        if self.batch_size > self.memory.size:
             return -float("inf")
         
         for epoch in range(epochs):
             # Pegamos uma amostra das nossas experiências para treinamento
-            (states, actions, rewards, next_states, dones, priorities, indexes) = self.memory.sample(batch_size)
+            (states, actions, rewards, next_states, dones, priorities, indexes) = self.memory.sample(self.batch_size)
 
             # Transformar nossas experiências em tensores
             states = torch.as_tensor(states).to(self.device, non_blocking=True)
