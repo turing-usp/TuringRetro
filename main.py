@@ -1,10 +1,8 @@
-import math
 import retro
-import numpy as np
-from collections import deque
 
 from agents.dqn.agent import DQNAgent
 from utils import retro_wrappers
+from utils.runner import train
 from utils.callbacks import EvalCallback, EpsilonCallback, CallbackList, SaveCallback
 
 def main():
@@ -51,45 +49,6 @@ def main():
                  min_epsilon=EPS_END)
     
     returns = train(agent, env, 1000000, callbacks)
-
-def train(agent, env, total_timesteps, callback):
-    total_reward = 0
-    episode_returns = deque(maxlen=20)
-    avg_returns = []
-
-    state = env.reset()
-    timestep = 0
-    episode = 0
-
-    while timestep < total_timesteps:
-        action = agent.act(state)
-        next_state, reward, done, _ = env.step(action)
-        agent.remember(state, action, reward, next_state, done)
-        loss = agent.train()
-        # env.render()
-        timestep += 1
-
-        total_reward += reward
-
-        if done:
-            episode_returns.append(total_reward)
-            episode += 1
-            callback.update(agent)
-            next_state = env.reset()
-
-        if episode_returns:
-            avg_returns.append(np.mean(episode_returns))
-
-        total_reward *= 1 - done
-        state = next_state
-
-        ratio = math.ceil(100 * timestep / total_timesteps)
-
-        avg_return = avg_returns[-1] if avg_returns else np.nan
-        
-        print(f"\r[{ratio:3d}%] timestep = {timestep}/{total_timesteps}, episode = {episode:3d}, avg_return = {avg_return:10.4f}, epsilon [{100*agent.epsilon:.2f}%],  loss = [{loss:2f}]", end="")
-
-    return avg_returns
 
 if __name__ == "__main__":
     main()
