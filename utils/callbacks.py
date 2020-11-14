@@ -54,7 +54,7 @@ class EvalCallback(Callback):
 
         if mean_score >= self.max_score:
             self.max_score = mean_score
-            agent.save_model("saved_models/best_model.pth")
+            agent.save_model("agents/saved_models/latest_model.pth")
 
 class EpsilonCallback(Callback):
     def __init__(self, epsilon_reset=0.5, frequency=1):
@@ -75,4 +75,4 @@ class SaveCallback(Callback):
         super(SaveCallback, self).update(agent)
 
     def run(self, agent):
-        agent.save_model("saved_models/latest_model.pth")
+        agent.save_model("agents/saved_models/latest_model.pth")
