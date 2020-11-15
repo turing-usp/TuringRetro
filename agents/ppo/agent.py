@@ -25,13 +25,18 @@ class PPOAgent:
 
     def act(self, state):
         state = torch.FloatTensor(state).to(self.device).unsqueeze(0)
-        probs, v = self.actorcritic.forward(state)
+        
+        with torch.no_grad():
+            probs, _ = self.actorcritic.forward(state)
+        
         action = probs.sample()
         log_prob = probs.log_prob(action)
-        return action.cpu().detach().item(), log_prob.detach().cpu().numpy()
+        self.log_prob = log_prob.cpu().numpy()
 
-    def remember(self, state, action, reward, next_state, done, logp):
-        self.memory.update(state, action, reward, next_state, done, logp)
+        return action.cpu().item()
+
+    def remember(self, state, action, reward, next_state, done):
+        self.memory.update(state, action, reward, next_state, done, self.log_prob)
 
     def compute_gae(self, rewards, dones, v, v2):
         T = len(rewards)
@@ -39,8 +44,8 @@ class PPOAgent:
         returns = torch.zeros_like(rewards)
         gaes = torch.zeros_like(rewards)
         
-        future_gae = torch.tensor(0.0, dtype=rewards.dtype)
-        next_return = torch.tensor(v2[-1], dtype=rewards.dtype)
+        future_gae = torch.tensor(0.0, dtype=rewards.dtype).to(self.device)
+        next_return = torch.tensor(v2[-1], dtype=rewards.dtype).to(self.device)
 
         not_dones = 1 - dones
         deltas = rewards + not_dones * self.gamma * v2 - v
@@ -67,9 +72,10 @@ class PPOAgent:
         old_logp = torch.FloatTensor(old_logp).to(self.device)
         
         with torch.no_grad():
-            _, v = self.actorcritic.forward(states)
-            _, v2 = self.actorcritic.forward(next_states)
-        
+            _, vs = self.actorcritic.forward(torch.cat((states, next_states[[-1]]), dim=0))
+        v = vs[:-1]
+        v2 = vs[1:]
+
         advantages, returns = self.compute_gae(rewards, dones, v, v2)
         
         for epoch in range(self.epochs):
