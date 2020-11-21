@@ -23,15 +23,18 @@ class PPOAgent:
         self.actorcritic = ActorCritic(observation_space.shape, action_space.n).to(self.device)
         self.actorcritic_optimizer = optim.Adam(self.actorcritic.parameters(), lr=lr)
 
-    def act(self, state):
+    def act(self, state, evaluate=False):
         state = torch.FloatTensor(state).to(self.device).unsqueeze(0)
         
         with torch.no_grad():
             probs, _ = self.actorcritic.forward(state)
         
-        action = probs.sample()
-        log_prob = probs.log_prob(action)
-        self.log_prob = log_prob.cpu().numpy()
+        if not evaluate:
+            action = probs.sample()
+            log_prob = probs.log_prob(action)
+            self.log_prob = log_prob.cpu().numpy()
+        else:
+            action = torch.argmax(probs.probs)
 
         return action.cpu().item()
 
@@ -45,7 +48,7 @@ class PPOAgent:
         gaes = torch.zeros_like(rewards)
         
         future_gae = torch.tensor(0.0, dtype=rewards.dtype).to(self.device)
-        next_return = torch.tensor(v2[-1], dtype=rewards.dtype).to(self.device)
+        next_return = v2[-1].clone().detach().to(self.device)
 
         not_dones = 1 - dones
         deltas = rewards + not_dones * self.gamma * v2 - v

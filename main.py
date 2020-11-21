@@ -14,16 +14,18 @@ def main():
     env = retro_wrappers.wrap_retro(env)
 
     eval_callback = EvalCallback(env, frequency=10, episode_count=1)
-    epsilon_callback = EpsilonCallback(frequency=100)
+    # epsilon_callback = EpsilonCallback(frequency=100)
     saving_callback = SaveCallback(frequency=1)
 
-    callbacks = CallbackList([eval_callback, epsilon_callback, saving_callback])
+    callbacks = CallbackList([eval_callback, 
+                            #   epsilon_callback, 
+                              saving_callback])
 
     OBS_SPACE = env.observation_space
     ACT_SPACE = env.action_space
     BATCH_SIZE = 32
     MAX_MEMORY = 10000
-    N_STEP = 3
+    N_STEP = 256
     VF_COEF = 0.5
     ENTROPY_COEF = 5e-3
     CLIP_PARAM = 0.2

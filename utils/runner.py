@@ -15,9 +15,9 @@ def train(agent, env, total_timesteps, callback):
     episode = 0
 
     while timestep < total_timesteps:
-        action, log_prob = agent.act(state)
+        action = agent.act(state)
         next_state, reward, done, _ = env.step(action)
-        agent.remember(state, action, reward, next_state, done, log_prob)
+        agent.remember(state, action, reward, next_state, done)
         loss = agent.train()
         timestep += 1
 

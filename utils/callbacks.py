@@ -42,7 +42,7 @@ class EvalCallback(Callback):
             total_reward = 0
             done = 0
             while not done:
-                action = agent.act(state, greedy=True)
+                action = agent.act(state, evaluate=True)
                 state, reward, done, _ = self.env.step(action)
                 total_reward += reward
             
