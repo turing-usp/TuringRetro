@@ -446,3 +446,4 @@ dmypy.json
 *.pickle
 **/imgs/*.pdf
 test.ipynb
+.vscode

@@ -40,7 +40,7 @@ def train(agent, env, total_timesteps, callback):
 
         avg_return = avg_returns[-1] if avg_returns else np.nan
         
-        print(f"\r[{ratio:3d}% / {uptime:3d}s] timestep = {timestep}/{total_timesteps}, episode = {episode:3d}, avg_return = {avg_return:10.4f}, epsilon [{100*agent.epsilon:.2f}%],  loss = [{loss:2f}]", end="")
+        print(f"\r[{ratio:3d}% / {uptime:3d}s] timestep = {timestep}/{total_timesteps}, episode = {episode:3d}, avg_return = {avg_return:10.4f}", end="")
 
     return avg_returns
 
