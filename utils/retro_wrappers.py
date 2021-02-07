@@ -336,48 +336,52 @@ class PenalizeDoneWrapper(gym.Wrapper):
         reward -= self.penalty
     return obs, reward, done, info
 
-def wrap_retro(env):
+def wrap_retro(env, transpose=True):
     """Configure environment for Retro environment."""
     env = MaxAndSkipEnv(env, skip=4)
     # env = WarpCutFrame(env)
     env = WarpFrame(env)
     env = FrameStack(env, 4)
     env = ScaledFloatFrame(env)
-    env = ObsReshape(env)
+    if transpose:
+        env = ObsReshape(env)
     env = SonicDiscretizer(env)
     return env
 
-def wrap_mario_kart(env):
+def wrap_mario_kart(env, transpose=True):
     """Configure environment for Mario Kart environment."""
     env = MaxAndSkipEnv(env, skip=4)
     env = WarpCutFrame(env)
     env = WarpFrame(env)
     env = FrameStack(env, 4)
     env = ScaledFloatFrame(env)
-    env = ObsReshape(env)
+    if transpose:
+        env = ObsReshape(env)
     env = TimeLimitWrapper(env)
     env = PenalizeDoneWrapper(env)
     env = SMarioKartDiscretizer(env)
     return env
 
-def wrap_fzero(env):
+def wrap_fzero(env, transpose=True):
     """Configure environment for F-Zero environment."""
     env = MaxAndSkipEnv(env, skip=4)
     env = WarpCutFrame(env)
     env = WarpFrame(env)
     env = FrameStack(env, 4)
     env = ScaledFloatFrame(env)
-    env = ObsReshape(env)
+    if transpose:
+        env = ObsReshape(env)
     env = FZeroDiscretizer(env)
     return env
 
-def wrap_megaman(env):
+def wrap_megaman(env, transpose=True):
     """Configure environment for MegaMan 2 environment."""
     env = MaxAndSkipEnv(env, skip=4)
     env = WarpCutFrame(env)
     env = WarpFrame(env)
     env = FrameStack(env, 4)
     env = ScaledFloatFrame(env)
-    #env = ObsReshape(env)
+    if transpose:
+        env = ObsReshape(env)
     env = MegaManDiscretizer(env)
     return env
