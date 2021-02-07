@@ -378,6 +378,6 @@ def wrap_megaman(env):
     env = WarpFrame(env)
     env = FrameStack(env, 4)
     env = ScaledFloatFrame(env)
-    env = ObsReshape(env)
+    #env = ObsReshape(env)
     env = MegaManDiscretizer(env)
     return env
