@@ -340,7 +340,6 @@ class PenalizeDoneWrapper(gym.Wrapper):
 def wrap_retro(env, transpose=True):
     """Configure environment for Retro environment."""
     env = MaxAndSkipEnv(env, skip=4)
-    # env = WarpCutFrame(env)
     env = WarpFrame(env)
     env = FrameStack(env, 4)
     env = ScaledFloatFrame(env)
@@ -366,7 +365,6 @@ def wrap_mario_kart(env, transpose=True):
 def wrap_fzero(env, transpose=True):
     """Configure environment for F-Zero environment."""
     env = MaxAndSkipEnv(env, skip=4)
-    env = WarpCutFrame(env)
     env = WarpFrame(env)
     env = FrameStack(env, 4)
     env = ScaledFloatFrame(env)
@@ -378,7 +376,6 @@ def wrap_fzero(env, transpose=True):
 def wrap_megaman(env, transpose=True):
     """Configure environment for MegaMan 2 environment."""
     env = MaxAndSkipEnv(env, skip=4)
-    env = WarpCutFrame(env)
     env = WarpFrame(env)
     env = FrameStack(env, 4)
     env = ScaledFloatFrame(env)
