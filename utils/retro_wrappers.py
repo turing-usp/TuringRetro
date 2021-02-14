@@ -290,21 +290,22 @@ class LazyFrames(object):
         return self._force()[..., i]
 
 class TimeLimitWrapper(gym.Wrapper):
-  def __init__(self, env, max_steps=1000):
-    super(TimeLimitWrapper, self).__init__(env)
-    self.max_steps = max_steps
-    self.current_step = 0
-  
-  def reset(self):
-    self.current_step = 0
-    return self.env.reset()
+    def __init__(self, env, max_episode_steps=2500):
+        super(TimeLimitWrapper, self).__init__(env)
+        self._max_episode_steps = max_episode_steps
+        self._elapsed_steps = 0
 
-  def step(self, action):
-    self.current_step += 1
-    obs, reward, done, info = self.env.step(action)
-    if self.current_step >= self.max_steps:
-      done = True
-    return obs, reward, done, info
+    def step(self, ac):
+        observation, reward, done, info = self.env.step(ac)
+        self._elapsed_steps += 1
+        if self._elapsed_steps >= self._max_episode_steps:
+            done = True
+            info['TimeLimit.truncated'] = True
+        return observation, reward, done, info
+
+    def reset(self, **kwargs):
+        self._elapsed_steps = 0
+        return self.env.reset(**kwargs)
 
 class ObsReshape(gym.ObservationWrapper):
     def __init__(self, env):
