@@ -19,7 +19,7 @@ args = parser.parse_args()
 if __name__ == "__main__":
     game = args.game
     state = args.state
-    wrapper = retro_wrappers.wrap_mario_kart
+    wrapper = retro_wrappers.get_wrapper(game)
     checkpoint = args.checkpoint
     train = args.train
 

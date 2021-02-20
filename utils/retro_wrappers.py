@@ -383,3 +383,10 @@ def wrap_megaman(env, transpose=True):
         env = ObsReshape(env)
     env = MegaManDiscretizer(env)
     return env
+
+def get_wrapper(game):
+    wrapper_dict = {"SuperMarioKart-Snes": wrap_mario_kart,
+                    "FZero-Snes": wrap_fzero,
+                    "MegaMan2-Nes": wrap_megaman}
+
+    return wrapper_dict[game]
