@@ -337,6 +337,19 @@ class PenalizeDoneWrapper(gym.Wrapper):
         reward -= self.penalty
     return obs, reward, done, info
 
+class MultipleStates(gym.Wrapper):
+    """This wrapper randomly loads a state listed in the state_names
+    upon reset"""
+    def __init__(self, env, state_names = -1):
+        gym.Wrapper.__init__(self, env)
+        self.state_names = state_names
+        
+    def reset(self):
+        if type(self.state_names) == list:
+            state = np.random.choice(self.state_names)
+            self.env.load_state(state)
+        return self.env.reset()
+
 def wrap_retro(env, transpose=True):
     """Configure environment for Retro environment."""
     env = MaxAndSkipEnv(env, skip=4)
