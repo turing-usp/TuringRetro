@@ -389,4 +389,4 @@ def get_wrapper(game):
                     "FZero-Snes": wrap_fzero,
                     "MegaMan2-Nes": wrap_megaman}
 
-    return wrapper_dict[game]
+    return wrapper_dict.get(game, wrap_retro)

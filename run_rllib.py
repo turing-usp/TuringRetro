@@ -13,6 +13,7 @@ parser.add_argument("game", type=str)
 parser.add_argument("state", type=str)
 parser.add_argument("-c", "--checkpoint", type=str)
 parser.add_argument("-t", "--train", action="store_true")
+parser.add_argument("-e", "--episodes", type=int, default=1)
 
 args = parser.parse_args()
 
@@ -22,6 +23,7 @@ if __name__ == "__main__":
     wrapper = retro_wrappers.get_wrapper(game)
     checkpoint = args.checkpoint
     train = args.train
+    episode_count = args.episodes
 
     info = ray.init(ignore_reinit_error=True)
 
@@ -54,4 +56,4 @@ if __name__ == "__main__":
     if train:
         trainer = train(agent, checkpoint=checkpoint)
     else:
-        test(agent, game, state, wrapper, checkpoint=checkpoint, render=True)
+        test(agent, game, state, wrapper, checkpoint=checkpoint, render=True, episode_count=episode_count)

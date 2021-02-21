@@ -41,7 +41,7 @@ def train(agent, checkpoint=None, iterations=1000000, save_every=25, save_path="
             result["episode_len_mean"]
         ))
 
-def test(agent, game, state, wrapper, checkpoint=None, render=False, record=False, maxepisodelen=10000):
+def test(agent, game, state, wrapper, checkpoint=None, render=False, record=False, episode_count=1, maxepisodelen=10000):
     """Tests and renders a previously trained model"""
     if checkpoint is None:
         warnings.warn("Running without a previously trained checkpoint")
@@ -55,7 +55,7 @@ def test(agent, game, state, wrapper, checkpoint=None, render=False, record=Fals
     if record:
         env = Monitor(env, './videos/', force=True)
 
-    while True:
+    for _ in range(episode_count):
         state = env.reset()
         done = False
         reward_total = 0.0
@@ -68,4 +68,5 @@ def test(agent, game, state, wrapper, checkpoint=None, render=False, record=Fals
                 env.render()
             state = next_state
             step = step + 1
+
     env.close()
