@@ -41,7 +41,7 @@ def run():
 
     agent.load_model("saved_models/best_model.pth")
     
-    test(agent, env, 1, False)
+    test(agent, env, 1, True)
 
 if __name__ == "__main__":
     run()

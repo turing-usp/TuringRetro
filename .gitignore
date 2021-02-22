@@ -447,3 +447,4 @@ dmypy.json
 **/imgs/*.pdf
 test.ipynb
 .vscode
+checkpoints/

@@ -290,21 +290,22 @@ class LazyFrames(object):
         return self._force()[..., i]
 
 class TimeLimitWrapper(gym.Wrapper):
-  def __init__(self, env, max_steps=1000):
-    super(TimeLimitWrapper, self).__init__(env)
-    self.max_steps = max_steps
-    self.current_step = 0
-  
-  def reset(self):
-    self.current_step = 0
-    return self.env.reset()
+    def __init__(self, env, max_episode_steps=2500):
+        super(TimeLimitWrapper, self).__init__(env)
+        self._max_episode_steps = max_episode_steps
+        self._elapsed_steps = 0
 
-  def step(self, action):
-    self.current_step += 1
-    obs, reward, done, info = self.env.step(action)
-    if self.current_step >= self.max_steps:
-      done = True
-    return obs, reward, done, info
+    def step(self, ac):
+        observation, reward, done, info = self.env.step(ac)
+        self._elapsed_steps += 1
+        if self._elapsed_steps >= self._max_episode_steps:
+            done = True
+            info['TimeLimit.truncated'] = True
+        return observation, reward, done, info
+
+    def reset(self, **kwargs):
+        self._elapsed_steps = 0
+        return self.env.reset(**kwargs)
 
 class ObsReshape(gym.ObservationWrapper):
     def __init__(self, env):
@@ -349,49 +350,56 @@ class MultipleStates(gym.Wrapper):
             self.env.load_state(state)
         return self.env.reset()
 
-
-def wrap_retro(env):
+def wrap_retro(env, transpose=True):
     """Configure environment for Retro environment."""
     env = MaxAndSkipEnv(env, skip=4)
-    # env = WarpCutFrame(env)
     env = WarpFrame(env)
     env = FrameStack(env, 4)
     env = ScaledFloatFrame(env)
-    env = ObsReshape(env)
+    if transpose:
+        env = ObsReshape(env)
     env = SonicDiscretizer(env)
     return env
 
-def wrap_mario_kart(env):
+def wrap_mario_kart(env, transpose=True):
     """Configure environment for Mario Kart environment."""
     env = MaxAndSkipEnv(env, skip=4)
     env = WarpCutFrame(env)
     env = WarpFrame(env)
     env = FrameStack(env, 4)
     env = ScaledFloatFrame(env)
-    env = ObsReshape(env)
+    if transpose:
+        env = ObsReshape(env)
     env = TimeLimitWrapper(env)
     env = PenalizeDoneWrapper(env)
     env = SMarioKartDiscretizer(env)
     return env
 
-def wrap_fzero(env):
+def wrap_fzero(env, transpose=True):
     """Configure environment for F-Zero environment."""
     env = MaxAndSkipEnv(env, skip=4)
-    env = WarpCutFrame(env)
     env = WarpFrame(env)
     env = FrameStack(env, 4)
     env = ScaledFloatFrame(env)
-    env = ObsReshape(env)
+    if transpose:
+        env = ObsReshape(env)
     env = FZeroDiscretizer(env)
     return env
 
-def wrap_megaman(env):
+def wrap_megaman(env, transpose=True):
     """Configure environment for MegaMan 2 environment."""
     env = MaxAndSkipEnv(env, skip=4)
-    env = WarpCutFrame(env)
     env = WarpFrame(env)
     env = FrameStack(env, 4)
     env = ScaledFloatFrame(env)
-    env = ObsReshape(env)
+    if transpose:
+        env = ObsReshape(env)
     env = MegaManDiscretizer(env)
     return env
+
+def get_wrapper(game):
+    wrapper_dict = {"SuperMarioKart-Snes": wrap_mario_kart,
+                    "FZero-Snes": wrap_fzero,
+                    "MegaMan2-Nes": wrap_megaman}
+
+    return wrapper_dict.get(game, wrap_retro)
