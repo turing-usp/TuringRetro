@@ -22,7 +22,7 @@ if __name__ == "__main__":
     state = args.state
     wrapper = retro_wrappers.get_wrapper(game)
     checkpoint = args.checkpoint
-    train = args.train
+    training = args.train
     episode_count = args.episodes
 
     info = ray.init(ignore_reinit_error=True)
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     register_retro(game, state, wrapper)
     agent = PPOTrainer(config=trainer_config, env=game)
 
-    if train:
+    if training:
         trainer = train(agent, checkpoint=checkpoint)
     else:
         test(agent, game, state, wrapper, checkpoint=checkpoint, render=True, episode_count=episode_count)
