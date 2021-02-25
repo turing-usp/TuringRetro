@@ -351,7 +351,7 @@ class MultipleStates(gym.Wrapper):
         if type(self.state_names) == list and self.count > self.max_count:
             state = np.random.choice(self.state_names)
             self.env.load_state(state)
-            self.count = 0
+            self.count = 1
         return self.env.reset()
 
 def wrap_retro(env, transpose=True):
