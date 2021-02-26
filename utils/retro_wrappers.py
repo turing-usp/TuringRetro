@@ -339,15 +339,19 @@ class PenalizeDoneWrapper(gym.Wrapper):
 
 class MultipleStates(gym.Wrapper):
     """This wrapper randomly loads a state listed in the state_names
-    upon reset"""
-    def __init__(self, env, state_names = -1):
+    upon reset after max_count episodes"""
+    def __init__(self, env, state_names = -1, max_count = 5):
         gym.Wrapper.__init__(self, env)
         self.state_names = state_names
+        self.max_count = max_count
+        self.count = 0
         
     def reset(self):
-        if type(self.state_names) == list:
+        self.count += 1
+        if type(self.state_names) == list and self.count > self.max_count:
             state = np.random.choice(self.state_names)
             self.env.load_state(state)
+            self.count = 1
         return self.env.reset()
 
 def wrap_retro(env, transpose=True):
