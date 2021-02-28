@@ -54,7 +54,7 @@ def test(agent, env, episodes, record=False):
         total_reward = 0
 
         while not done:
-            action = agent.act(state, greedy=True)
+            action = agent.act(state, evaluate=True)
             state, reward, done, _ = env.step(action)
             env.render()
             total_reward += reward

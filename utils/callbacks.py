@@ -21,6 +21,16 @@ class CallbackList(Callback):
         for callback in self.callbacks:
             callback.update(agent)
 
+class BlankCallback(Callback):
+    def __init__(self, frequency=1):
+        super(BlankCallback, self).__init__(frequency)
+
+    def update(self, agent):
+        super(BlankCallback, self).update(agent)
+
+    def run(self, agent):
+        return None
+
 class EvalCallback(Callback):
     def __init__(self, env, episode_count=1, frequency=1):
         super(EvalCallback, self).__init__(frequency)

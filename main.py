@@ -1,24 +1,38 @@
 import retro
+import argparse
 
 from agents.dqn.agent import DQNAgent
 from agents.ppo.agent import PPOAgent
 from utils import retro_wrappers
 from utils.runner import train
-from utils.callbacks import EvalCallback, EpsilonCallback, CallbackList, SaveCallback
+from utils.callbacks import CallbackList, BlankCallback, EvalCallback, EpsilonCallback, SaveCallback
+
+parser = argparse.ArgumentParser()
+parser.add_argument("game", type=str)
+parser.add_argument("state", type=str)
+parser.add_argument("-s", "--scenario", type=str, default="scenario")
+parser.add_argument("-d", "--dqn", action="store_true")
+parser.add_argument("-t", "--timesteps", type=int, default=1000000)
+
+args = parser.parse_args()
 
 def main():
-    game_rom = "MegaMan2-Nes" #Nome da rom
-    state = "Normal.Metalman.Fight.state" 
-    scenario = "scenario"
-    env = retro.make(game_rom, state=state, scenario=scenario)
-    env = retro_wrappers.wrap_retro(env)
+    game = args.game
+    state = args.state
+    scenario = args.scenario
+    dqn = args.dqn
+    timesteps = args.timesteps
+    wrapper = retro_wrappers.get_wrapper(game)
+    
+    env = retro.make(game, state=state, scenario=scenario)
+    env = wrapper(env)
 
     eval_callback = EvalCallback(env, frequency=10, episode_count=1)
-    # epsilon_callback = EpsilonCallback(frequency=100)
     saving_callback = SaveCallback(frequency=1)
+    epsilon_callback = EpsilonCallback(frequency=100) if dqn else BlankCallback(frequency=1)
 
     callbacks = CallbackList([eval_callback, 
-                            #   epsilon_callback, 
+                              epsilon_callback, 
                               saving_callback])
 
     OBS_SPACE = env.observation_space
@@ -41,33 +55,34 @@ def main():
     EPS_END = 0.025
     EPS_DECAY = 0.9995
 
-    # agent = DQNAgent(observation_space=OBS_SPACE, 
-    #              action_space=ACT_SPACE,
-    #              batch_size=BATCH_SIZE,
-    #              max_memory=MAX_MEMORY,
-    #              n_step=N_STEP,
-    #              alpha=ALPHA,
-    #              beta=BETA,
-    #              beta_decay=BETA_DECAY, 
-    #              lr=LEARNING_RATE, 
-    #              gamma=GAMMA,
-    #              tau=TAU, 
-    #              epsilon_init=EPS_INIT,
-    #              epsilon_decay=EPS_DECAY,
-    #              min_epsilon=EPS_END)
-    
-    agent = PPOAgent(observation_space=OBS_SPACE,
+    if dqn:
+        agent = DQNAgent(observation_space=OBS_SPACE, 
                     action_space=ACT_SPACE,
-                    lr=LEARNING_RATE,
+                    batch_size=BATCH_SIZE,
+                    max_memory=MAX_MEMORY,
+                    n_step=N_STEP,
+                    alpha=ALPHA,
+                    beta=BETA,
+                    beta_decay=BETA_DECAY, 
+                    lr=LEARNING_RATE, 
                     gamma=GAMMA,
-                    lam=LAM,
-                    vf_coef=VF_COEF,
-                    entropy_coef=ENTROPY_COEF,
-                    clip_param=CLIP_PARAM,
-                    epochs=EPOCH,
-                    n_steps=N_STEP)
+                    tau=TAU, 
+                    epsilon_init=EPS_INIT,
+                    epsilon_decay=EPS_DECAY,
+                    min_epsilon=EPS_END)
+    else:
+        agent = PPOAgent(observation_space=OBS_SPACE,
+                        action_space=ACT_SPACE,
+                        lr=LEARNING_RATE,
+                        gamma=GAMMA,
+                        lam=LAM,
+                        vf_coef=VF_COEF,
+                        entropy_coef=ENTROPY_COEF,
+                        clip_param=CLIP_PARAM,
+                        epochs=EPOCH,
+                        n_steps=N_STEP)
 
-    returns = train(agent, env, 1000000, callbacks)
+    returns = train(agent, env, timesteps, callbacks)
 
 if __name__ == "__main__":
     main()
