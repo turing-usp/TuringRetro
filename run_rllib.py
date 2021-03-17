@@ -52,12 +52,10 @@ if __name__ == "__main__":
         agent = ppo.PPOTrainer(config=trainer_config, env=game)
     elif agent == "IMPALA":
         trainer_config = impala.DEFAULT_CONFIG.copy()
-        trainer_config['rollout_fragment_length'] = 20
-        trainer_config['train_batch_size'] = 32
+        trainer_config['rollout_fragment_length'] = 50
+        trainer_config['train_batch_size'] = 500
+        trainer_config['num_workers'] = 8
         trainer_config['num_envs_per_worker'] = 1
-        trainer_config['grad_clip'] = 40
-        trainer_config['momentum'] = 0.00
-        trainer_config['epsilon'] = 0.01
         agent = impala.ImpalaTrainer(config=trainer_config, env=game)
     
     #Common parameters
