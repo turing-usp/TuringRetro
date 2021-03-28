@@ -35,6 +35,10 @@ if __name__ == "__main__":
     
     if agent == "PPO":
         trainer_config = ppo.DEFAULT_CONFIG.copy()
+        trainer_config['log_level'] = "WARN"
+        trainer_config['clip_rewards'] = True
+        trainer_config["num_gpus"] = 1
+        trainer_config['output'] = './checkpoints/' 
         trainer_config['num_workers'] = 0
         trainer_config["num_cpus_per_worker"] = 4
         trainer_config["num_envs_per_worker"] = 1
@@ -52,20 +56,6 @@ if __name__ == "__main__":
         trainer_config['framework'] = 'tf' if framework == "tf" else 'torch'
             
         agent = ppo.PPOTrainer(config=trainer_config, env=game)
-    elif agent == "APEXDQN":
-        trainer_config = dqn.apex.APEX_DEFAULT_CONFIG.copy()
-        trainer_config['log_level'] = "WARN"
-        trainer_config['clip_rewards'] = True
-        trainer_config["num_gpus"] = 1
-        trainer_config['output'] = './checkpoints/' 
-        trainer_config['target_network_update_freq'] = 20000
-        trainer_config["remote_worker_envs"] = True
-        trainer_config["num_workers"] = 4
-        trainer_config['num_envs_per_worker'] = 2
-        trainer_config['lr'] = .00005
-        trainer_config['train_batch_size'] = 64
-        trainer_config['gamma'] = 0.99
-        agent = dqn.apex.ApexTrainer(config=trainer_config, env=game)
     elif agent == "IMPALA":
         trainer_config = impala.DEFAULT_CONFIG.copy()
         trainer_config['log_level'] = "WARN"
