@@ -1,4 +1,4 @@
-<img src="https://media1.giphy.com/media/70JLXQ1K9ViyKUcBxd/giphy.gif" width="40%" style="float:right"/>
+<img src="https://media1.giphy.com/media/70JLXQ1K9ViyKUcBxd/giphy.gif" width="40%" align="right"/>
 
 # 🎮 TuringRetro
 
@@ -72,7 +72,7 @@ TODO.
 
 #### Super Mario Kart
 
-<img src="https://imgur.com/ZHHFcxJ.gif" width="40%" style="vertical-align:middle"/>
+<img src="https://imgur.com/ZHHFcxJ.gif" width="40%"/>
 
 ## Guia de Instalação
 
