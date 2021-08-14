@@ -61,7 +61,7 @@ TODO.
 
 #### Mega Man 2
 
-<p align="left">
+<p align="center">
   <img src="https://media4.giphy.com/media/Nv5PW31wt9jYbHmrt4/giphy.gif" width="200"/>
   <img src="https://media4.giphy.com/media/fIDmLfkDkGiDy2GrP5/giphy.gif" width="200"/>
    <img src="https://media1.giphy.com/media/70JLXQ1K9ViyKUcBxd/giphy.gif" width="200"/> </br>
@@ -72,7 +72,11 @@ TODO.
 
 #### Super Mario Kart
 
-<img src="https://imgur.com/ZHHFcxJ.gif" width="40%"/>
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/48636340/129455071-facbd740-736a-402d-9338-338a4e0c7c8e.gif" width="40%"/>
+</p>
+
+https://user-images.githubusercontent.com/48636340/129455149-7816ba08-9338-462a-b997-ee733e5e5770.mp4
 
 ## Guia de Instalação
 
