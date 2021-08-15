@@ -76,8 +76,6 @@ TODO.
   <img src="https://user-images.githubusercontent.com/48636340/129455071-facbd740-736a-402d-9338-338a4e0c7c8e.gif" width="40%"/>
 </p>
 
-https://user-images.githubusercontent.com/48636340/129455982-3b8b5e15-3f07-4750-ab42-46b54be0e3c2.mp4
-
 ## Guia de Instalação
 
 ### Bibliotecas necessárias
