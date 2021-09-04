@@ -17,6 +17,7 @@ parser.add_argument("-a", "--agent", type=str, default="PPO")
 parser.add_argument("-f", "--framework", type=str, default="tf")
 parser.add_argument("-e", "--episodes", type=int, default=1)
 parser.add_argument("-r", "--record", action="store_true")
+parser.add_argument("-s", "--scenario", type=str, default="scenario")
 
 args = parser.parse_args()
 
@@ -30,10 +31,11 @@ if __name__ == "__main__":
     framework = args.framework
     episode_count = args.episodes
     record = args.record
+    scenario = args.scenario
 
     info = ray.init(ignore_reinit_error=True)
     
-    register_retro(game, state, wrapper)
+    register_retro(game, state, scenario, wrapper)
     
     if agent == "PPO":
         trainer_config = ppo.DEFAULT_CONFIG.copy()
@@ -80,4 +82,4 @@ if __name__ == "__main__":
     if training:
         trainer = train(agent, checkpoint=checkpoint)
     else:
-        test(agent, game, state, wrapper, checkpoint=checkpoint, render=True, record=record, episode_count=episode_count)
+        test(agent, game, state, scenario, wrapper, checkpoint=checkpoint, render=True, record=record, episode_count=episode_count)
