@@ -3,13 +3,13 @@ import retro
 from gym.wrappers import Monitor
 from ray.tune import register_env
 
-def retro_env_creator(game, state, wrapper):
-    base = retro.make(game=game, state=state)
+def retro_env_creator(game, state, scenario, wrapper):
+    base = retro.make(game=game, state=state, scenario=scenario)
     base = wrapper(base, transpose=False)
     return base
 
-def register_retro(game, state, wrapper):
-    env_creator = lambda env_config: retro_env_creator(game, state, wrapper)
+def register_retro(game, state, scenario, wrapper):
+    env_creator = lambda env_config: retro_env_creator(game, state, scenario, wrapper)
     register_env(game, env_creator)
 
 def train(agent, checkpoint=None, iterations=1000000, save_every=25, save_path="./checkpoints/"):
@@ -41,7 +41,7 @@ def train(agent, checkpoint=None, iterations=1000000, save_every=25, save_path="
             result["episode_len_mean"]
         ))
 
-def test(agent, game, state, wrapper, checkpoint=None, render=False, record=False, episode_count=1, maxepisodelen=10000):
+def test(agent, game, state, scenario, wrapper, checkpoint=None, render=False, record=False, episode_count=1, maxepisodelen=10000):
     """Tests and renders a previously trained model"""
     if checkpoint is None:
         warnings.warn("Running without a previously trained checkpoint")
@@ -50,7 +50,7 @@ def test(agent, game, state, wrapper, checkpoint=None, render=False, record=Fals
     
     agent.cleanup()
 
-    env = retro_env_creator(game, state, wrapper)
+    env = retro_env_creator(game, state, scenario, wrapper)
     
     if record:
         env = Monitor(env, './videos/', force=True)
