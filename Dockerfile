@@ -15,3 +15,5 @@ RUN mkdir /tmp/rom \
     && rm -rf /tmp/rom
 
 COPY ./environments ./environments
+
+WORKDIR /turing-retro
