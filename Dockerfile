@@ -3,7 +3,7 @@ FROM python:3.8.12
 RUN pip install tensorflow \
     pip install ray[rllib] \
     pip install gym-retro \
-    && pip install pandas
+    && pip install opencv-python
 
 RUN apt-get update && apt-get install -y curl
 
