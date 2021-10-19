@@ -448,3 +448,5 @@ dmypy.json
 test.ipynb
 .vscode
 checkpoints/
+.bash_history
+.python_history
