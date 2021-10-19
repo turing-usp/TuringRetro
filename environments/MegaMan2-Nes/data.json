@@ -1,0 +1,20 @@
+{
+  "info": {
+    "bossDied": {
+      "address": 1729,
+      "type": "<u4"
+    },
+    "health": {
+      "address": 1728,
+      "type": "|u1"
+    },
+    "healthBoss": {
+      "address": 1729,
+      "type": "<u4"
+    },
+    "lives": {
+      "address": 168,
+      "type": "|u1"
+    }
+  }
+}
