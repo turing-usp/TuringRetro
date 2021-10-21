@@ -97,6 +97,20 @@ pip install ray[rllib]
 pip install gym-retro
 ```
 
+### 🐋 Docker
+
+Este repositório é acompanhado de uma _Dockerfile_, que faz todo o trabalho de instalação necessário para rodar o projeto de maneira fácil e automática. Para rodar o projeto com o Docker, basta rodar o seguinte comando na raiz do repositório:
+
+```bash
+docker build -t turing-retro .
+```
+
+Em seguida, para rodar a imagem baixada com o conteúdo deste projeto, é necessário usar o comando:
+
+```bash
+docker run --rm -it -v $PWD:/turing-retro turing-retro /bin/bash
+```
+
 ### Instalando jogos já integrados
 
 > Alguns jogos já são integrados com o gym-retro, você pode olhar esta lista [aqui](https://github.com/openai/retro/tree/master/retro/data/stable)
