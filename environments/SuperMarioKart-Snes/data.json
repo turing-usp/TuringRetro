@@ -1,0 +1,44 @@
+{
+  "info": {
+    "fell": {
+      "address": 4263,
+      "type": ">d6"
+    },
+    "lakitu": {
+      "address": 8264742,
+      "type": "|i1"
+    },
+    "lap": {
+      "address": 8261825,
+      "type": "|u1"
+    },
+    "pos": {
+      "address": 4288,
+      "type": "<u1"
+    },
+    "reverse": {
+      "address": 113,
+      "type": "|u1"
+    },
+    "speed": {
+      "address": 8261866,
+      "type": "|i2"
+    },
+    "surface": {
+      "address": 8261806,
+      "type": "|i2"
+    },
+    "surface2": {
+      "address": 8261806,
+      "type": "|i2"
+    },
+    "timer": {
+      "address": 258,
+      "type": "<d2"
+    },
+    "water": {
+      "address": 8261804,
+      "type": "|u1"
+    }
+  }
+}

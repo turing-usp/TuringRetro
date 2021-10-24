@@ -1,0 +1,34 @@
+{
+  "crop": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "done": {
+    "variables": {
+      "lakitu": {
+        "op": "equal",
+        "reference": -1
+      },
+      "lap": {
+        "op": "equal",
+        "reference": 133
+      }
+    }
+  },
+  "reward": {
+    "variables": {
+      "lap": {
+        "reward": 5.0
+      },
+      "pos": {
+        "reward": 1.0
+      },
+      "speed": null,
+      "timer": {
+        "reward": -0.10000000149011612
+      }
+    }
+  }
+}

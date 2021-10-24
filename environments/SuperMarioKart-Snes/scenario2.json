@@ -1,0 +1,23 @@
+{
+  "done": {
+    "variables": {
+      "surface": {
+        "op": "equal",
+        "reference": 84
+      }
+    }
+  },
+  "reward": {
+    "variables": {
+      "pos": {
+        "reward": 1.0
+      },
+      "timer": {
+        "reward": -0.1
+      },
+      "speed": {
+        "reward": 0.009999999776482582
+      }
+    }
+  }
+}
