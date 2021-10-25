@@ -7,6 +7,7 @@ RUN pip install tensorflow \
 
 RUN apt-get update && apt-get install -y curl 
 RUN apt-get -y install python3-opencv
+RUN apt-get -y install ffmpeg
 
 RUN mkdir /tmp/rom \
     && curl -L -o /tmp/rom/megaman2.zip https://archive.org/download/No-Intro-Collection_2016-01-03_Fixed/Nintendo%20-%20Nintendo%20Entertainment%20System.zip/Mega%20Man%202%20%28USA%29.zip \
