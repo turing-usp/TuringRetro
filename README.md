@@ -108,7 +108,7 @@ docker build -t turing-retro .
 Em seguida, para rodar a imagem baixada com o conteúdo deste projeto, é necessário usar o comando:
 
 ```bash
-docker run --rm -it -v $PWD:/turing-retro turing-retro /bin/bash
+docker run --rm -it -v $PWD:/turing-retro turing-retro
 ```
 
 ### Instalando jogos já integrados
