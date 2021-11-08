@@ -123,7 +123,7 @@ python3 -m retro.import endereco/do/diretorio/das/ROMs/
 
 Para jogos como o Mega Man 2, criamos uma série de estados e cenários de recompensas diferentes dos já instalados no gym-retro e colocamos na pasta _environments_. Desta forma, para instalar este ambiente e o Super Mario Kart, basta adicionar a ROM baixada do jogo na pasta referente com o nome _rom.ext_ em que _.ext_ é a extensão da ROM. (As extensões podem ser encontradas [nesta seção](https://retro.readthedocs.io/en/latest/integration.html#supported-rom-types) da documentação do gym-retro)
 
-Caso queira integrar algum outro jogo não presente na lista do gym-retro, vá para próxima seção [Instalando jogos não instalados](###Instalando-jogos-não-integrados).
+Caso queira integrar algum outro jogo não presente na lista do gym-retro, vá para próxima seção [Instalando jogos não instalados](#Instalando-jogos-não-integrados).
 
 ### Instalando jogos não integrados
 
