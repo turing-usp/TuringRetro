@@ -48,7 +48,7 @@ python run_rllib.py game state -t
 Por exemplo, para treinar um agente de *Mega Man 2* contra o boss *Airman*, basta rodar o seguinte comando:
 
 ```bash
-python run_rllib.py MegaMan2-Nes Airman.Normal.Fight.state -t
+python run_rllib.py MegaMan2-Nes Normal.Airman.Fight.state -t
 ```
 
 ## Sobre o Projeto
