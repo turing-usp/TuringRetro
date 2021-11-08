@@ -41,7 +41,7 @@ if __name__ == "__main__":
         trainer_config = ppo.DEFAULT_CONFIG.copy()
         trainer_config['log_level'] = "WARN"
         trainer_config['clip_rewards'] = True
-        trainer_config["num_gpus"] = 1
+        trainer_config["num_gpus"] = 0
         trainer_config['output'] = './checkpoints/' 
         trainer_config['num_workers'] = 0
         trainer_config["num_cpus_per_worker"] = 4

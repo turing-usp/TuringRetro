@@ -1,0 +1,39 @@
+project:
+  name: TuringRetro 
+  syncFilters:
+    - exclude:
+      - .git/*
+      - '*/__pycache__/*'
+
+containers:
+  - projectDir: /workspace/project
+    file: ./Dockerfile
+    ports:
+      # TensorBoard
+      - containerPort: 6006
+        hostPort: 6006
+    volumeMounts:
+      - name: turing-rl-hd-retro
+        mountPath: /workspace
+
+instances:
+  - name: turing-rl-retro 
+    provider: aws
+    parameters:
+      region: us-east-1
+      instanceType: c5a.4xlarge
+      ports: [6006]
+      dockerDataRoot: /docker
+      volumes:
+        - name: workspace
+          parameters:
+            size: 50
+            deletionPolicy: retain
+        - name: docker
+          parameters:
+            size: 10
+            mountDir: /docker
+            deletionPolicy: retain
+scripts:
+  tensorboard: |
+    tensorboard --bind_all --port 6006 --logdir /workspace/project/training

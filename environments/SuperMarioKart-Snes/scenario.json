@@ -1,0 +1,50 @@
+{
+  "crop": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "done": {
+    "variables": {
+      "fell": {
+        "op": "equal",
+        "reference": 4
+      },
+      "lakitu": {
+        "op": "equal",
+        "reference": -1
+      },
+      "lap": {
+        "op": "equal",
+        "reference": 133
+      },
+      "surface": {
+        "op": "equal",
+        "reference": 84
+      },
+      "surface2": {
+        "op": "equal",
+        "reference": 90
+      },
+      "water": {
+        "op": "equal",
+        "reference": 8
+      }
+    }
+  },
+  "reward": {
+    "variables": {
+      "lap": {
+        "reward": 5.0
+      },
+      "pos": {
+        "reward": 1.0
+      },
+      "speed": null,
+      "timer": {
+        "reward": -0.10000000149011612
+      }
+    }
+  }
+}

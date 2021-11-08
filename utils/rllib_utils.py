@@ -1,10 +1,19 @@
 import warnings
 import retro
+import os
 from gym.wrappers import Monitor
 from ray.tune import register_env
 
+def add_integrations():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    env_path = os.path.join(os.path.dirname(current_dir), "environments")
+
+    retro.data.Integrations.add_custom_path(env_path)
+
 def retro_env_creator(game, state, scenario, wrapper):
-    base = retro.make(game=game, state=state, scenario=scenario)
+    add_integrations()
+    
+    base = retro.make(game=game, state=state, scenario=scenario, inttype=retro.data.Integrations.ALL)
     base = wrapper(base, transpose=False)
     return base
 
