@@ -27,10 +27,10 @@ Para rodar o TuringRetro com um agente pré-treinado, deve-se rodar o arquivo _r
 python run_rllib.py game state -c checkpoint -e numero_de_episodios
 ```
 
-Por exemplo, para rodar 1 episódio de um agente de *Super Mario Kart* treinado na pista *Mario Circuit 1*, basta rodar o seguinte comando:
+Por exemplo, para rodar 1 episódio de um agente de *Super Mario Kart* treinado na pista *Rainbow Road*, basta rodar o seguinte comando:
 
 ```bash
-python run_rllib.py SuperMarioKart-Snes mario1.state -c (inserir checkpoint aqui) -e 1
+python run_rllib.py SuperMarioKart-Snes rainbow_road_yoshi.state -c trained_models/SuperMarioKart-Snes/rainbow_road/model -e 1
 ```
 
 ### 🏋️‍♂️ Treinar um agente
@@ -53,9 +53,7 @@ python run_rllib.py MegaMan2-Nes Airman.Normal.Fight.state -t
 
 ## Sobre o Projeto
 
-TODO.
-
-(Projeto de Aprendizado por Reforço do Grupo Turing utilizando o Gym Retro.)
+O objetivo do TuringRetro é testar algoritmos de Aprendizado por Reforço Profundo em diferentes ambientes de jogos retrô, como Mega Man e Super Mario Kart. Para isso, foram treinados algoritmos tanto disponibilizados na biblioteca RLLib quanto programados pelo próprio grupo Turing USP, encontrados na pasta _agents_. 
 
 ### Ambientes
 
@@ -78,6 +76,20 @@ TODO.
 
 ## Guia de Instalação
 
+### 🐋 Docker
+
+Este repositório é acompanhado de uma _Dockerfile_, que faz todo o trabalho de instalação necessário para rodar o projeto de maneira fácil e automática. Para rodar o projeto com o Docker, basta rodar o seguinte comando na raiz do repositório:
+
+```bash
+docker build -t turing-retro .
+```
+
+Em seguida, para rodar a imagem baixada com o conteúdo deste projeto, é necessário usar o comando:
+
+```bash
+docker run --rm -it -v $PWD:/turing-retro turing-retro
+```
+
 ### Bibliotecas necessárias
 
 -  [RLlib](https://github.com/ray-project/ray) - Biblioteca que utilizamos para usar os algoritmos de RL
@@ -97,20 +109,6 @@ pip install ray[rllib]
 pip install gym-retro
 ```
 
-### 🐋 Docker
-
-Este repositório é acompanhado de uma _Dockerfile_, que faz todo o trabalho de instalação necessário para rodar o projeto de maneira fácil e automática. Para rodar o projeto com o Docker, basta rodar o seguinte comando na raiz do repositório:
-
-```bash
-docker build -t turing-retro .
-```
-
-Em seguida, para rodar a imagem baixada com o conteúdo deste projeto, é necessário usar o comando:
-
-```bash
-docker run --rm -it -v $PWD:/turing-retro turing-retro
-```
-
 ### Instalando jogos já integrados
 
 > Alguns jogos já são integrados com o gym-retro, você pode olhar esta lista [aqui](https://github.com/openai/retro/tree/master/retro/data/stable)
@@ -123,13 +121,10 @@ Com as ROMs dos jogos baixadas, execute o seguinte comando para passar instalar 
 python3 -m retro.import endereco/do/diretorio/das/ROMs/
 ```
 
-Para jogos como o Mega Man 2, criamos uma série de estados e cenários de recompensas diferentes dos já instalados no gym-retro, por conta disso será necessário que você baixe o `.zip` do ambiente do jogo desejado e o descompacte no diretório onde o gym-retro está instalado. Você pode localizá-lo com os seguintes comandos em um terminal com Python:
+Para jogos como o Mega Man 2, criamos uma série de estados e cenários de recompensas diferentes dos já instalados no gym-retro e colocamos na pasta _environments_. Desta forma, para instalar este ambiente e o Super Mario Kart, basta adicionar a ROM baixada do jogo na pasta referente com o nome _rom.ext_ em que _.ext_ é a extensão da ROM. (As extensões podem ser encontradas [nesta seção](https://retro.readthedocs.io/en/latest/integration.html#supported-rom-types) da documentação do gym-retro)
 
-```bash
-python
->>> import retro
->>> retro.__file__
-```  
-Vá então para a pasta `gym-retro/retro/data/stable` e procure a pasta do jogo e a descompacte lá. (caso ele não esteja, vá para seção [Instalando jogos não instalados](###Instalando-jogos-não-integrados))
+Caso queira integrar algum outro jogo não presente na lista do gym-retro, vá para próxima seção [Instalando jogos não instalados](###Instalando-jogos-não-integrados).
 
 ### Instalando jogos não integrados
+
+🚧 Em Construção 🏗️
