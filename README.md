@@ -71,7 +71,11 @@ O objetivo do TuringRetro é testar algoritmos de Aprendizado por Reforço Profu
 #### Super Mario Kart
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/48636340/129455071-facbd740-736a-402d-9338-338a4e0c7c8e.gif" width="40%"/>
+  <img src="https://i.imgur.com/iabhOlt.jpg" width="60%"/> </br>
+  <img src="https://media.giphy.com/media/UoLwsojXMylYBNmrBD/source.gif" width="30%"/>
+  <img src="https://media.giphy.com/media/qZCpDFlATEbX6O7N9K/source.gif" width="30%"/> </br>
+  <img src="https://media.giphy.com/media/bp6nKQXRZDzZVf9v7F/source.gif" width="30%"/>
+  <img src="https://media.giphy.com/media/yKawloD7Osk4ZUYHok/source.gif" width="30%"/>
 </p>
 
 ## Guia de Instalação
