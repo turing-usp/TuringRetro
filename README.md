@@ -94,6 +94,8 @@ Em seguida, para rodar a imagem baixada com o conteúdo deste projeto, é necess
 docker run --rm -it -v $PWD:/turing-retro turing-retro
 ```
 
+Caso esteja usando o Docker no Windows, basta trocar o comando ```$PWD``` por ```%cd%```.
+
 ### Bibliotecas necessárias
 
 -  [RLlib](https://github.com/ray-project/ray) - Biblioteca que utilizamos para usar os algoritmos de RL
