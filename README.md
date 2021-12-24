@@ -60,11 +60,15 @@ O objetivo do TuringRetro é testar algoritmos de Aprendizado por Reforço Profu
 #### Mega Man 2
 
 <p align="center">
-  <img src="https://media4.giphy.com/media/Nv5PW31wt9jYbHmrt4/giphy.gif" width="200"/>
+ 
+  <img src="https://media3.giphy.com/media/K1E9tAtqvn78Wsze6V/giphy.gif" width="200"/>
   <img src="https://media4.giphy.com/media/fIDmLfkDkGiDy2GrP5/giphy.gif" width="200"/>
-   <img src="https://media1.giphy.com/media/70JLXQ1K9ViyKUcBxd/giphy.gif" width="200"/> </br>
-  <img src="https://media2.giphy.com/media/cJOJBT6iBgPlMTeNuV/giphy.gif" width="200"/>
+  <img src="https://media1.giphy.com/media/70JLXQ1K9ViyKUcBxd/giphy.gif" width="200"/> </br>
+  <img src="https://media1.giphy.com/media/PZpjN2f6nR0qlpUfOh/giphy.gif" width="200"/>
   <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/e3831030-47af-4f65-b849-5330fe69ce85/d4xhejk-ccbc3f91-4802-4dc8-a549-f32febbc71a0.png/v1/fill/w_900,h_887,q_75,strp/dr__wily_logo_by_callmemra-d4xhejk.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwic3ViIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl0sIm9iaiI6W1t7InBhdGgiOiIvZi9lMzgzMTAzMC00N2FmLTRmNjUtYjg0OS01MzMwZmU2OWNlODUvZDR4aGVqay1jY2JjM2Y5MS00ODAyLTRkYzgtYTU0OS1mMzJmZWJiYzcxYTAucG5nIiwid2lkdGgiOiI8PTkwMCIsImhlaWdodCI6Ijw9ODg3In1dXX0.x7B-G0R0Xd0_uOU9kiSalO0tOFnbO_-aI5DOpkPM-LQ" width="200"/>
+  <img src="https://media1.giphy.com/media/577nRf3KtclHIpHkCN/giphy.gif" width="200"/> </br>
+  <img src="https://media2.giphy.com/media/cJOJBT6iBgPlMTeNuV/giphy.gif" width="200"/>
+  <img src="https://media4.giphy.com/media/Nv5PW31wt9jYbHmrt4/giphy.gif" width="200"/>
   <img src="https://media3.giphy.com/media/DWcx4fQNJFT9WuqAsI/giphy.gif" width="200"/>
 </p>
 
